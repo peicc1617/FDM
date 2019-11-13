@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>创新方法工作平台</title>
+	<!--添加页面框架-->
+	<link rel="import" id="frame" href="/webresources/common/html/appFrame.html">
+	<script type="text/javascript" src="js/buttonAction.js"></script>
+	<!--引入bootstrap-table.css-->
+	<link rel="stylesheet" href="./bootstrap-table/bootstrap-table.min.css">
+	<!--bootstrap-table.js-->
+	<script src="./bootstrap-table/bootstrap-table.min.js"></script>
+	<!--业务js-->
+	<script src="js/tableEdit.js"></script>
+</head>
+<body class="no-skin">
+<div id="mainFunctionHtml">
+	  <div id="myCustomLi">
+			<li class="active">
+				  <a data-toggle="tab" href="#abc">
+						<i class="green ace-icon fa fa-desktop bigger-120"></i>数据输入</a>
+			</li>
+			<li class="">
+				  <a data-toggle="tab" href="#def">
+						<i class="purple ace-icon fa fa-pencil-square-o bigger-120"></i>FDM分析</a>
+			</li>
+	  </div>
+	  <div id="myCustomTab">
+			<div class="tab-pane active" id="abc">
+				<!--按钮区域-->
+				  <div id="mainBtnGroup" class="btn-group btn-group-sm">
+						<button type="button" class="btn btn-primary" onclick="addRow()">
+							  <span class="glyphicon glyphicon-plus"></span>添加数据
+						</button>
+						<button type="button" class="btn btn-danger" onclick="deleteRow()">
+							  <span class="glyphicon glyphicon-trash"></span>删除节点
+						</button>
+						<button type="button" class="btn btn-info" id="saveProject" onclick="saveProject()">
+							  <span class="glyphicon glyphicon-check"></span>保存
+						</button>
+						<button type="button" class="btn btn-info" id="saveAsProject">
+							  <span class="glyphicon glyphicon-log-in"></span>另存
+						</button>
+				  </div>
+				<!--表格区域-->
+
+
+				<div>
+					<table id="table" data-toggle="table" >
+						<thead>
+						<tr>
+							<th data-field="id">ID</th>
+							<th data-field="name">零件名称</th>
+							<th data-field="function">功能得分</th>
+							<th data-field="cost">成本金额</th>
+							<th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">编辑</th>
+						</tr>
+						</thead>
+						<!--<tbody>-->
+						<!--<tr>-->
+							<!--<td>1</td>-->
+							<!--<td>1</td>-->
+							<!--<td>1</td>-->
+							<!--<td>1</td>-->
+						<!--</tr>-->
+						<!--<tr>-->
+							<!--<td>2</td>-->
+							<!--<td>1</td>-->
+							<!--<td>1</td>-->
+							<!--<td>1</td>-->
+						<!--</tr>-->
+						<!--</tbody>-->
+					</table>
+				</div>
+
+			</div>
+			<div class="tab-pane" id="def">
+				  这是界面2
+			</div>
+	  </div>
+</div>
+<!--帮助页面-->
+<div id="helpHtml">
+	  <div class="page-header">
+			<h1>
+				  **App使用说明
+			</h1>
+	  </div>
+	  <div class="alert alert-block alert-success" id="appHelp">
+			<div class="helpClass">
+				  <p class="helpP">
+						<i class="ace-icon fa fa-check green"></i>
+						欢迎使用<strong class="green">App</strong>, 使用流程如下：<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;1、首先*****<br>
+						截图<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;2、其次*****<br>
+						截图<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;3、最后*****<br>
+						截图<br>
+				  <p>
+			</div>
+	  </div>
+</div>
+<!--模态框-->
+<!--添加一行数据-->
+<div id="addItem" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">添加相关数据</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="addItemPop">
+					<table>
+						<tr>
+							<td>零件名称：</td> <td><input type="text" id="name" size="20" style="margin-right: 10px" /></td>
+							<td>功能得分：</td> <td><input type="text" id="function" size="20" style="margin-right: 10px" /></td>
+						</tr>
+						<tr>
+							<td>成本金额：</td> <td><input type="text" id="cost" size="20" style="margin-right: 10px" /></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="addItem()">确定</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--对行数据进行编辑-->
+<div id="editItem" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">添加相关数据</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="editItemPop">
+					<table>
+						<tr>
+							<td>零件名称：</td> <td><input type="text" id="name_edit" size="20" style="margin-right: 10px" /></td>
+							<td>功能得分：</td> <td><input type="text" id="function_edit" size="20" style="margin-right: 10px" /></td>
+						</tr>
+						<tr>
+							<td>成本金额：</td> <td><input type="text" id="cost_edit" size="20" style="margin-right: 10px" /></td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="editRow()">确定</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

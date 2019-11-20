@@ -1,5 +1,5 @@
 var $table1 = $('#table');
-
+//编辑列函数
 function operateFormatter(value, row, index) {
     return [
         '<a class="edit" href="javascript:void(0)" title="编辑数据">',
@@ -65,4 +65,33 @@ function addItem(){
     });
     // $table.bootstrapTable('append',rowData);
     $('#table').bootstrapTable('append', rowData);
+}
+//footer函数
+function idFormatter(data) {
+    return 'Total';
+}
+
+function nameFormatter(data) {
+    return data.length
+}
+
+function functionFormatter(data) {
+    var field = this.field
+    var data=data.map(function (row) {
+        return +row[field]
+    }).reduce(function (sum, i) {
+        return sum + i
+    }, 0);
+    sum_function=data;
+    return data;
+}
+function costFormatter(data) {
+    var field = this.field
+    var data=data.map(function (row) {
+        return +row[field]
+    }).reduce(function (sum, i) {
+        return sum + i
+    }, 0);
+    sum_cost=data;
+    return data;
 }

@@ -12,6 +12,10 @@
 	<script src="./bootstrap-table/bootstrap-table.min.js"></script>
 	<!--业务js-->
 	<script src="js/tableEdit.js"></script>
+	<script src="js/fdm.js"></script>
+    <!--引入echart-->
+    <script src="echart/echarts.min.js"></script>
+    <script src="js/echart.js"></script>
 </head>
 <body class="no-skin">
 <div id="mainFunctionHtml">
@@ -32,50 +36,55 @@
 						<button type="button" class="btn btn-primary" onclick="addRow()">
 							  <span class="glyphicon glyphicon-plus"></span>添加数据
 						</button>
-						<button type="button" class="btn btn-danger" onclick="deleteRow()">
-							  <span class="glyphicon glyphicon-trash"></span>删除节点
-						</button>
 						<button type="button" class="btn btn-info" id="saveProject" onclick="saveProject()">
 							  <span class="glyphicon glyphicon-check"></span>保存
 						</button>
-						<button type="button" class="btn btn-info" id="saveAsProject">
+						<button type="button" class="btn btn-info" id="saveAsProject" data-toggle="modal" data-target="#saveAsModal">
 							  <span class="glyphicon glyphicon-log-in"></span>另存
 						</button>
 				  </div>
-				<!--表格区域-->
-
-
+				<!--输入表格区域-->
 				<div>
-					<table id="table" data-toggle="table" >
+					<table id="table" data-toggle="table" data-show-footer="true">
 						<thead>
 						<tr>
-							<th data-field="id">ID</th>
-							<th data-field="name">零件名称</th>
-							<th data-field="function">功能得分</th>
-							<th data-field="cost">成本金额</th>
+							<th data-field="id" data-footer-formatter="idFormatter">ID</th>
+							<th data-field="name" data-footer-formatter="nameFormatter">零件名称</th>
+							<th data-field="function" data-footer-formatter="functionFormatter">功能得分</th>
+							<th data-field="cost" data-footer-formatter="costFormatter">成本金额</th>
 							<th data-field="operate" data-formatter="operateFormatter" data-events="operateEvents">编辑</th>
 						</tr>
 						</thead>
-						<!--<tbody>-->
-						<!--<tr>-->
-							<!--<td>1</td>-->
-							<!--<td>1</td>-->
-							<!--<td>1</td>-->
-							<!--<td>1</td>-->
-						<!--</tr>-->
-						<!--<tr>-->
-							<!--<td>2</td>-->
-							<!--<td>1</td>-->
-							<!--<td>1</td>-->
-							<!--<td>1</td>-->
-						<!--</tr>-->
-						<!--</tbody>-->
 					</table>
 				</div>
 
 			</div>
 			<div class="tab-pane" id="def">
-				  这是界面2
+				<!--按钮区域-->
+				<div id="mainBtnGroup1" class="btn-group btn-group-sm " >
+					<button type="button" class="btn btn-primary" onclick="calculate()">
+						<span class="glyphicon glyphicon-superscript"></span>参数计算
+					</button>
+					<button type="button" class="btn btn-info" onclick="show()">
+						<span class="glyphicon glyphicon-signal"></span>可视化显示
+					</button>
+				</div>
+				<!--输出表格区域-->
+				<div>
+					<table id="table1" data-toggle="table" >
+						<thead>
+						<tr>
+							<th data-field="id">ID</th>
+							<th data-field="name_parameter">零件名称</th>
+							<th data-field="function_parameter">功能评价系数</th>
+							<th data-field="cost_parameter">成本系数</th>
+							<th data-field="value_parameter">价值系数</th>
+						</tr>
+						</thead>
+					</table>
+				</div>
+                <!--echarts图表区域-->
+                <div id="container" style="height: 500px; width: 100%;"></div>
 			</div>
 	  </div>
 </div>
@@ -83,20 +92,23 @@
 <div id="helpHtml">
 	  <div class="page-header">
 			<h1>
-				  **App使用说明
+				  FDMApp使用说明
 			</h1>
 	  </div>
 	  <div class="alert alert-block alert-success" id="appHelp">
 			<div class="helpClass">
 				  <p class="helpP">
 						<i class="ace-icon fa fa-check green"></i>
-						欢迎使用<strong class="green">App</strong>, 使用流程如下：<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;1、首先*****<br>
-						截图<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;2、其次*****<br>
-						截图<br>
-						&nbsp;&nbsp;&nbsp;&nbsp;3、最后*****<br>
-						截图<br>
+						欢迎使用<strong class="green">FDMApp</strong>, 使用流程如下：<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;1、首先输入相关数据<br>
+					  <image src="./image/help/step1.JPG" height="300" width="530">
+						<br>
+						&nbsp;&nbsp;&nbsp;&nbsp;2、其次进行FDM<br>
+						  <image src="./image/help/step2.JPG" height="300" width="530">
+						  <br>
+						&nbsp;&nbsp;&nbsp;&nbsp;3、最后对报告进行编辑并保存<br>
+							  <image src="./image/help/step3.JPG" height="300" width="530">
+							  <br>
 				  <p>
 			</div>
 	  </div>
@@ -158,6 +170,31 @@
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" onclick="editRow()">确定</button>
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--另存为模态框-->
+<div class="modal fade" id="saveAsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="newProjectModalTitle">新建项目</h4>
+			</div>
+			<div class="modal-body">
+				<!--  -->
+				<div class="input-group">
+					<span class="input-group-addon">项目名：</span> <input type="text" class="form-control" placeholder="请输入项目名称" id="saveAsProjectNameModal">
+				</div>
+				<br>
+				<div class="input-group">
+					<span class="input-group-addon">备 注：</span> <input type="text" class="form-control" placeholder="请输入备注" id="saveAsProjectRemarkModal">
+				</div>
+				<br>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-primary" onclick="saveAsProject()" id="saveAsProButton">确认</button>
 			</div>
 		</div>
 	</div>
